@@ -1,5 +1,6 @@
 package tony.coffeeshop.menu.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.Comment;
 public class Menu {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MENU_ID")
     @Comment("메뉴ID")
     private Long id;
 
