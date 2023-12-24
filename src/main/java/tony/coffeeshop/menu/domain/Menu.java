@@ -8,11 +8,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import tony.coffeeshop.menu.domain.dto.MenuResponseDto;
 
+@Getter
 @Table(name = "Menu")
 @Entity
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Menu {
@@ -27,4 +32,12 @@ public class Menu {
 
     @Comment("메뉴가격")
     private int menuPrice;
+
+    public static MenuResponseDto toDto(Menu menu) {
+        return MenuResponseDto.builder()
+                .id(menu.getId())
+                .menuName(menu.menuName)
+                .menuPrice(menu.menuPrice)
+                .build();
+    }
 }
