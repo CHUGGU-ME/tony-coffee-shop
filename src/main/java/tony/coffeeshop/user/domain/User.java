@@ -9,11 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+@Getter
 @Table(name = "User")
 @Entity
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
@@ -28,4 +32,8 @@ public class User {
 
     @Comment("사용자 포인트")
     private int userPoint;
+
+    public void depositPoint(int point) {
+        this.userPoint += point;
+    }
 }
