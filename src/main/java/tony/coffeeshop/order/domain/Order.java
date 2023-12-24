@@ -12,12 +12,15 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import tony.coffeeshop.order.domain.dto.OrderResponseDto;
 import tony.coffeeshop.user.domain.User;
 
 @Table(name = "Orders")
 @Entity
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
@@ -39,4 +42,13 @@ public class Order {
 
     @Comment("주문 일시")
     private LocalDateTime orderedAt;
+
+    public OrderResponseDto toDto() {
+        return OrderResponseDto.builder()
+                .userSeq(this.user.getId())
+                .menuName(this.menuName)
+                .orderPrice(this.orderPrice)
+                .orderedAt(this.orderedAt)
+                .build();
+    }
 }
