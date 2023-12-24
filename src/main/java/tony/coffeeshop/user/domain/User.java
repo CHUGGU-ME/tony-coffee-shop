@@ -36,4 +36,11 @@ public class User {
     public void depositPoint(int point) {
         this.userPoint += point;
     }
+
+    public void payPoint(int menuPrice) {
+        if (this.getUserPoint() < menuPrice) {
+            throw new IllegalStateException("user current point is not enough");
+        }
+        this.userPoint -= menuPrice;
+    }
 }
