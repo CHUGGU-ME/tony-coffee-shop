@@ -18,7 +18,7 @@ import org.hibernate.annotations.Comment;
 import tony.coffeeshop.order.domain.dto.OrderResponseDto;
 import tony.coffeeshop.user.domain.User;
 
-@Table(name = "Orders")
+@Table(name = "ORDERS")
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,12 +34,15 @@ public class Order {
     @JoinColumn(name = "USER_SEQ")
     private User user;
 
+    @Column(name = "MENU_NAME")
     @Comment("메뉴명")
     private String menuName;
 
+    @Column(name = "ORDER_PRICE")
     @Comment("주문 가격")
     private int orderPrice;
 
+    @Column(name = "ORDERED_AT")
     @Comment("주문 일시")
     private LocalDateTime orderedAt;
 

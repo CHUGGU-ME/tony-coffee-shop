@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Getter
-@Table(name = "User")
+@Table(name = "USER")
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,9 +27,11 @@ public class User {
     @Column(name = "USER_SEQ")
     private Long id;
 
+    @Column(name = "USER_ID")
     @Comment("사용자 ID")
     private String userId;
 
+    @Column(name = "USER_POINT")
     @Comment("사용자 포인트")
     private int userPoint;
 

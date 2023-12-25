@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import tony.coffeeshop.user.domain.User;
 
 @Getter
-@Table(name = "PointTransaction")
+@Table(name = "POINT_TRANSACTION")
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,12 +39,15 @@ public class PointTransaction {
     @JoinColumn(name = "USER_SEQ")
     private User user;
 
+    @Column(name = "POINT")
     @Comment("충전/사용 포인트")
     private int point;
 
+    @Column(name = "TRANSACTION_TYPE")
     @Comment("포인트 이력 구분")
     private String transactionType;
 
+    @Column(name = "TRANSACTION_AT")
     @Comment("포인트 이력 일시")
     private LocalDateTime transactionAt;
 }
