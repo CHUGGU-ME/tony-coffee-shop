@@ -15,7 +15,7 @@ import org.hibernate.annotations.Comment;
 import tony.coffeeshop.menu.domain.dto.MenuResponseDto;
 
 @Getter
-@Table(name = "Menu")
+@Table(name = "MENU")
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,9 +27,11 @@ public class Menu {
     @Comment("메뉴ID")
     private Long id;
 
+    @Column(name = "MENU_NAME")
     @Comment("메뉴명")
     private String menuName;
 
+    @Column(name = "MENU_PRICE")
     @Comment("메뉴가격")
     private int menuPrice;
 

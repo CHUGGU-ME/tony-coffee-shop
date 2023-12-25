@@ -1,6 +1,7 @@
 package tony.coffeeshop.order.component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,11 @@ import tony.coffeeshop.menu.repository.MenuRepository;
 import tony.coffeeshop.order.domain.Order;
 import tony.coffeeshop.order.domain.dto.OrderRequestDto;
 import tony.coffeeshop.order.domain.dto.OrderResponseDto;
+import tony.coffeeshop.order.domain.dto.OrderWeeklyTop3;
 import tony.coffeeshop.order.repository.OrderRepository;
+import tony.coffeeshop.pointtransaction.domain.PointTransaction;
+import tony.coffeeshop.pointtransaction.domain.dto.TransactionType;
+import tony.coffeeshop.pointtransaction.repository.PointTransactionRepository;
 import tony.coffeeshop.user.domain.User;
 import tony.coffeeshop.user.repository.UserRepository;
 
@@ -20,6 +25,7 @@ public class OrderComponent {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final MenuRepository menuRepository;
+    private final PointTransactionRepository pointTransactionRepository;
 
     @Transactional
     public OrderResponseDto orderMenu(OrderRequestDto orderRequestDto) {
@@ -30,14 +36,29 @@ public class OrderComponent {
         User user = userRepository.findById(orderRequestDto.getUserSeq()).get();
         user.payPoint(menu.getMenuPrice());
 
+        LocalDateTime transactionAt = LocalDateTime.now();
+        // 포인트 사용 기록 저장
+        PointTransaction pointTransaction = PointTransaction.builder()
+                .user(user)
+                .point(menu.getMenuPrice())
+                .transactionType(TransactionType.USE.name())
+                .transactionAt(transactionAt)
+                .build();
+        pointTransactionRepository.save(pointTransaction);
+
         // 결제하고 order 만들어서 저장
         Order order = Order.builder()
                 .user(user)
                 .menuName(menu.getMenuName())
                 .orderPrice(menu.getMenuPrice())
-                .orderedAt(LocalDateTime.now())
+                .orderedAt(transactionAt)
                 .build();
         orderRepository.save(order);
         return order.toDto();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderWeeklyTop3> getWeeklyTop3() {
+        return orderRepository.getWeeklyTop3();
     }
 }

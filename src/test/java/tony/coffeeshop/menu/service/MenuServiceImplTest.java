@@ -1,5 +1,6 @@
 package tony.coffeeshop.menu.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import tony.coffeeshop.menu.domain.Menu;
 import tony.coffeeshop.menu.domain.dto.MenuResponseDto;
 import tony.coffeeshop.menu.repository.MenuRepository;
+import tony.coffeeshop.order.domain.dto.OrderRequestDto;
+import tony.coffeeshop.order.service.OrderService;
+import tony.coffeeshop.user.domain.User;
 
 @SpringBootTest
 @Transactional
@@ -17,6 +21,9 @@ class MenuServiceImplTest {
 
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private MenuRepository menuRepository;
