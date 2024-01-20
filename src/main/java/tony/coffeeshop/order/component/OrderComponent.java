@@ -1,10 +1,14 @@
 package tony.coffeeshop.order.component;
 
+import static tony.coffeeshop.pointtransaction.service.PointTransactionServiceImpl.USER_POINT_LOCK_PREFIX;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import tony.coffeeshop.common.LockHandler;
+import tony.coffeeshop.common.TransactionHandler;
 import tony.coffeeshop.menu.domain.Menu;
 import tony.coffeeshop.menu.repository.MenuRepository;
 import tony.coffeeshop.order.domain.Order;
@@ -26,35 +30,45 @@ public class OrderComponent {
     private final UserRepository userRepository;
     private final MenuRepository menuRepository;
     private final PointTransactionRepository pointTransactionRepository;
+    private final LockHandler lockHandler;
+    private final TransactionHandler transactionHandler;
 
-    @Transactional
     public OrderResponseDto orderMenu(OrderRequestDto orderRequestDto) {
-        // 메뉴 찾아서 가격 조회하고
-        Menu menu = menuRepository.findById(orderRequestDto.getMenuId()).get();
+        return lockHandler.runOnLock(
+            USER_POINT_LOCK_PREFIX + orderRequestDto.getUserSeq(),
+            2000L,
+                1000L,
+                () -> transactionHandler.runOnWriteTransaction(
+                        () -> {
+                            // 메뉴 찾아서 가격 조회하고
+                            Menu menu = menuRepository.findById(orderRequestDto.getMenuId()).get();
 
-        // 유저 찾아서 포인트 충분한지 확인하고 메뉴 가격만큼 빼기
-        User user = userRepository.findById(orderRequestDto.getUserSeq()).get();
-        user.payPoint(menu.getMenuPrice());
+                            // 유저 찾아서 포인트 충분한지 확인하고 메뉴 가격만큼 빼기
+                            User user = userRepository.findById(orderRequestDto.getUserSeq()).get();
+                            user.payPoint(menu.getMenuPrice());
 
-        LocalDateTime transactionAt = LocalDateTime.now();
-        // 포인트 사용 기록 저장
-        PointTransaction pointTransaction = PointTransaction.builder()
-                .user(user)
-                .point(menu.getMenuPrice())
-                .transactionType(TransactionType.USE.name())
-                .transactionAt(transactionAt)
-                .build();
-        pointTransactionRepository.save(pointTransaction);
+                            LocalDateTime transactionAt = LocalDateTime.now();
+                            // 포인트 사용 기록 저장
+                            PointTransaction pointTransaction = PointTransaction.builder()
+                                    .user(user)
+                                    .point(menu.getMenuPrice())
+                                    .transactionType(TransactionType.USE.name())
+                                    .transactionAt(transactionAt)
+                                    .build();
+                            pointTransactionRepository.save(pointTransaction);
 
-        // 결제하고 order 만들어서 저장
-        Order order = Order.builder()
-                .user(user)
-                .menuName(menu.getMenuName())
-                .orderPrice(menu.getMenuPrice())
-                .orderedAt(transactionAt)
-                .build();
-        orderRepository.save(order);
-        return order.toDto();
+                            // 결제하고 order 만들어서 저장
+                            Order order = Order.builder()
+                                    .user(user)
+                                    .menuName(menu.getMenuName())
+                                    .orderPrice(menu.getMenuPrice())
+                                    .orderedAt(transactionAt)
+                                    .build();
+                            orderRepository.save(order);
+                            return order.toDto();
+                        }
+                )
+        );
     }
 
     @Transactional(readOnly = true)
