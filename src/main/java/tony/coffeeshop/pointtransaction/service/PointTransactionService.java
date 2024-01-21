@@ -4,5 +4,5 @@ import tony.coffeeshop.pointtransaction.domain.dto.PointDepositRequestDto;
 
 public interface PointTransactionService {
 
-    int depositPoint(PointDepositRequestDto pointDepositRequestDto);
+    void depositPoint(PointDepositRequestDto pointDepositRequestDto);
 }

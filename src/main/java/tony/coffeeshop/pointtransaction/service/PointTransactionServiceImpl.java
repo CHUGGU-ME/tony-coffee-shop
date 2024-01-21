@@ -11,8 +11,10 @@ public class PointTransactionServiceImpl implements PointTransactionService {
 
     private final PointTransactionComponent pointTransactionComponent;
 
+    public static String USER_POINT_LOCK_PREFIX = "USER_";
+
     @Override
-    public int depositPoint(PointDepositRequestDto pointDepositRequestDto) {
-        return pointTransactionComponent.depositPoint(pointDepositRequestDto);
+    public void depositPoint(PointDepositRequestDto pointDepositRequestDto) {
+        pointTransactionComponent.depositPoint(pointDepositRequestDto);
     }
 }
