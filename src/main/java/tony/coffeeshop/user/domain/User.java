@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Getter
-@Table(name = "USER")
+@Table(name = "USERS")
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
