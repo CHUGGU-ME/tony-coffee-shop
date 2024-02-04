@@ -14,7 +14,7 @@ import tony.coffeeshop.menu.repository.MenuRepository;
 import tony.coffeeshop.order.domain.Order;
 import tony.coffeeshop.order.domain.dto.OrderRequestDto;
 import tony.coffeeshop.order.domain.dto.OrderResponseDto;
-import tony.coffeeshop.order.domain.dto.OrderWeeklyTop3;
+import tony.coffeeshop.order.domain.dto.OrderWeeklyTop3Dto;
 import tony.coffeeshop.order.repository.OrderRepository;
 import tony.coffeeshop.pointtransaction.domain.PointTransaction;
 import tony.coffeeshop.pointtransaction.domain.dto.TransactionType;
@@ -72,7 +72,7 @@ public class OrderComponent {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderWeeklyTop3> getWeeklyTop3() {
-        return orderRepository.getWeeklyTop3();
+    public List<OrderWeeklyTop3Dto> getWeeklyTop3(LocalDateTime startDate, LocalDateTime endDate) {
+        return orderRepository.getWeeklyTop3(startDate, endDate);
     }
 }

@@ -15,7 +15,7 @@ import tony.coffeeshop.menu.repository.MenuRepository;
 import tony.coffeeshop.menu.service.MenuService;
 import tony.coffeeshop.order.domain.dto.OrderRequestDto;
 import tony.coffeeshop.order.domain.dto.OrderResponseDto;
-import tony.coffeeshop.order.domain.dto.OrderWeeklyTop3;
+import tony.coffeeshop.order.domain.dto.OrderWeeklyTop3Dto;
 import tony.coffeeshop.user.domain.User;
 import tony.coffeeshop.user.repository.UserRepository;
 
@@ -261,7 +261,7 @@ class OrderServiceImplTest {
         }
 
         // when
-        List<OrderWeeklyTop3> weeklyTop3 = orderService.getWeeklyTop3();
+        List<OrderWeeklyTop3Dto> weeklyTop3 = orderService.getWeeklyTop3();
 
         // then
         Assertions.assertThat(weeklyTop3).hasSize(3);
