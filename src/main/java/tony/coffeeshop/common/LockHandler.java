@@ -21,17 +21,22 @@ public class LockHandler {
 
         public <T> T runOnLock(String key, Long waitTimeMs, Long leaseTimeMs, Supplier<T> execute) {
             RLock lock = redissonClient.getLock(REDISSON_KEY_PREFIX + key);
+            boolean available = false;
             try {
-                boolean available = lock.tryLock(waitTimeMs, leaseTimeMs, TimeUnit.MICROSECONDS);
+                available = lock.tryLock(waitTimeMs, leaseTimeMs, TimeUnit.MILLISECONDS);
                 if (!available) {
                     throw new RuntimeException("time out");
                 }
                 log.info("get lock success {}", key);
                 return execute.get();
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 throw new RuntimeException(e);
             } finally {
-                lock.unlock();
+                if (available) {
+                   lock.unlock();
+                   log.info("lock released {}", key);
+                }
             }
         }
 }
