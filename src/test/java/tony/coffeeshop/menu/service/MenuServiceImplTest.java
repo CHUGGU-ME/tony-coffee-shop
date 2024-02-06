@@ -1,8 +1,10 @@
 package tony.coffeeshop.menu.service;
 
-import java.time.LocalDateTime;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tony.coffeeshop.menu.domain.Menu;
 import tony.coffeeshop.menu.domain.dto.MenuResponseDto;
 import tony.coffeeshop.menu.repository.MenuRepository;
-import tony.coffeeshop.order.domain.dto.OrderRequestDto;
 import tony.coffeeshop.order.service.OrderService;
-import tony.coffeeshop.user.domain.User;
 
 @SpringBootTest
 @Transactional
@@ -23,10 +23,10 @@ class MenuServiceImplTest {
     private MenuService menuService;
 
     @Autowired
-    private OrderService orderService;
-
-    @Autowired
     private MenuRepository menuRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @DisplayName("get all menu")
     @Test
@@ -49,14 +49,17 @@ class MenuServiceImplTest {
 
         menuRepository.saveAll(List.of(iceAmericano, hotChoco, hotLatte));
 
+        em.flush();
+        em.clear();
+
         // when
         List<MenuResponseDto> allMenu = menuService.getAllMenu();
 
         // then
-        Assertions.assertThat(allMenu).hasSize(3);
-        Assertions.assertThat(allMenu).extracting("menuName")
+        assertThat(allMenu).hasSize(3);
+        assertThat(allMenu).extracting("menuName")
                 .containsExactlyInAnyOrder(iceAmericano.getMenuName(), hotChoco.getMenuName(), hotLatte.getMenuName());
-        Assertions.assertThat(allMenu).extracting("menuPrice")
+        assertThat(allMenu).extracting("menuPrice")
                 .containsExactlyInAnyOrder(iceAmericano.getMenuPrice(), hotChoco.getMenuPrice(), hotLatte.getMenuPrice());
     }
 }
