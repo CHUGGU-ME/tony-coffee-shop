@@ -124,34 +124,68 @@ class OrderServiceImplTest {
                 CompletableFuture.runAsync(() -> orderService.orderMenu(orderRequestDto2))
         ).join();
 
+        // then
+        User user = userRepository.findById(orderRequestDto1.getUserSeq()).get();
+        int userPoint = user.getUserPoint();
+        Assertions.assertThat(10000 - 4500 - 5500).isEqualTo(userPoint);
+    }
 
-        /*
-        List<OrderRequestDto> orders = List.of(orderRequestDto1, orderRequestDto2);
-        int numberThreads = 2;
-        CountDownLatch countDownLatch = new CountDownLatch(numberThreads);
-        ExecutorService executorService = Executors.newFixedThreadPool(numberThreads);
+    @DisplayName("user orders menu 3 times concurrently")
+    @Test
+    public void userOrderMenu3TimesConcurrently() throws InterruptedException {
+        // given
+        User testUser = User.builder()
+                .userId("testUser")
+                .userPoint(20000)
+                .build();
 
-        for (int i = 0; i < numberThreads; i++) {
-            int idx = i;
-            try {
-                executorService.execute(
-                        () -> orderService.orderMenu(orders.get(idx))
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                countDownLatch.countDown();
-            }
-        }
-        countDownLatch.await();
-        executorService.shutdown();
-        */
+        User saveUser = userRepository.save(testUser);
+
+        Menu iceAmericano = Menu.builder()
+                .menuName("ice americano")
+                .menuPrice(5000)
+                .build();
+        Menu hotChoco = Menu.builder()
+                .menuName("hot chocolate")
+                .menuPrice(4500)
+                .build();
+        Menu hotLatte = Menu.builder()
+                .menuName("hotLatte")
+                .menuPrice(5500)
+                .build();
+        menuRepository.saveAll(List.of(iceAmericano, hotChoco, hotLatte));
+
+        // when
+        OrderRequestDto orderRequestDto1 = OrderRequestDto.builder()
+                .userSeq(saveUser.getId())
+                .menuId(iceAmericano.getId())
+                .orderedAt(LocalDateTime.now())
+                .build();
+
+        OrderRequestDto orderRequestDto2 = OrderRequestDto.builder()
+                .userSeq(saveUser.getId())
+                .menuId(hotChoco.getId())
+                .orderedAt(LocalDateTime.now())
+                .build();
+
+        OrderRequestDto orderRequestDto3 = OrderRequestDto.builder()
+                .userSeq(saveUser.getId())
+                .menuId(hotLatte.getId())
+                .orderedAt(LocalDateTime.now())
+                .build();
+
+        CompletableFuture.allOf(
+                CompletableFuture.runAsync(() -> orderService.orderMenu(orderRequestDto1)),
+                CompletableFuture.runAsync(() -> orderService.orderMenu(orderRequestDto2)),
+                CompletableFuture.runAsync(() -> orderService.orderMenu(orderRequestDto3))
+        ).join();
 
         // then
         User user = userRepository.findById(orderRequestDto1.getUserSeq()).get();
         int userPoint = user.getUserPoint();
-        Assertions.assertThat(10000 - 5500 - 5500).isEqualTo(userPoint);
+        Assertions.assertThat(20000 - 5000 - 4500 - 5500).isEqualTo(userPoint);
     }
+
 
     @DisplayName("search weekly top 3 menus")
     @Test
