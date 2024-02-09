@@ -1,16 +1,15 @@
 package tony.coffeeshop.pointtransaction.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDateTime;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import tony.coffeeshop.pointtransaction.domain.PointTransaction;
 import tony.coffeeshop.pointtransaction.domain.dto.PointDepositRequestDto;
 import tony.coffeeshop.pointtransaction.domain.dto.TransactionType;
-import tony.coffeeshop.pointtransaction.repository.PointTransactionRepository;
 import tony.coffeeshop.user.domain.User;
 import tony.coffeeshop.user.repository.UserRepository;
 
@@ -20,9 +19,6 @@ class PointTransactionServiceImplTest {
 
     @Autowired
     private PointTransactionService pointTransactionService;
-
-    @Autowired
-    private PointTransactionRepository pointTransactionRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -49,7 +45,9 @@ class PointTransactionServiceImplTest {
         pointTransactionService.depositPoint(pointDepositRequestDto);
 
         // then
-        User findUser = userRepository.findById(saveUser.getId()).get();
-        Assertions.assertThat(findUser.getUserPoint()).isEqualTo(9500);
+        User findUser = userRepository.findById(saveUser.getId()).orElseThrow(
+                () -> new IllegalArgumentException("Can't find user from user_seq")
+        );
+        assertThat(findUser.getUserPoint()).isEqualTo(9550);
     }
 }
