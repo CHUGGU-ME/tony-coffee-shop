@@ -1,11 +1,12 @@
 package tony.coffeeshop.order.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,9 +77,9 @@ class OrderServiceImplTest {
         OrderResponseDto orderResponseDto = orderService.orderMenu(orderRequestDto);
 
         // then
-        Assertions.assertThat(orderResponseDto.getUserSeq()).isEqualTo(saveUser.getId());
-        Assertions.assertThat(orderResponseDto.getMenuName()).isEqualTo(hotChoco.getMenuName());
-        Assertions.assertThat(orderResponseDto.getOrderPrice()).isEqualTo(hotChoco.getMenuPrice());
+        assertThat(orderResponseDto.getUserSeq()).isEqualTo(saveUser.getId());
+        assertThat(orderResponseDto.getMenuName()).isEqualTo(hotChoco.getMenuName());
+        assertThat(orderResponseDto.getOrderPrice()).isEqualTo(hotChoco.getMenuPrice());
     }
 
     @DisplayName("user orders menu concurrently")
@@ -125,9 +126,9 @@ class OrderServiceImplTest {
         ).join();
 
         // then
-        User user = userRepository.findById(orderRequestDto1.getUserSeq()).get();
+        User user = userRepository.findById(saveUser.getId()).get();
         int userPoint = user.getUserPoint();
-        Assertions.assertThat(10000 - 4500 - 5500).isEqualTo(userPoint);
+        assertThat(10000 - 4500 - 5500).isEqualTo(userPoint);
     }
 
     @DisplayName("user orders menu 3 times concurrently")
@@ -181,9 +182,9 @@ class OrderServiceImplTest {
         ).join();
 
         // then
-        User user = userRepository.findById(orderRequestDto1.getUserSeq()).get();
+        User user = userRepository.findById(saveUser.getId()).get();
         int userPoint = user.getUserPoint();
-        Assertions.assertThat(20000 - 5000 - 4500 - 5500).isEqualTo(userPoint);
+        assertThat(20000 - 5000 - 4500 - 5500).isEqualTo(userPoint);
     }
 
 
@@ -298,8 +299,8 @@ class OrderServiceImplTest {
         List<OrderWeeklyTop3Dto> weeklyTop3 = orderService.getWeeklyTop3();
 
         // then
-        Assertions.assertThat(weeklyTop3).hasSize(3);
-        Assertions.assertThat(weeklyTop3).extracting("menuName")
+        assertThat(weeklyTop3).hasSize(3);
+        assertThat(weeklyTop3).extracting("menuName")
                 .containsExactlyInAnyOrder(iceAmericano.getMenuName(), hotChoco.getMenuName(), iceWater.getMenuName());
     }
 }
