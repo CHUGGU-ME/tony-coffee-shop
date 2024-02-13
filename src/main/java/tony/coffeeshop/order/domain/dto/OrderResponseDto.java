@@ -1,13 +1,9 @@
 package tony.coffeeshop.order.domain.dto;
 
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.Comment;
-import tony.coffeeshop.user.domain.User;
 
 @Getter
 @Builder
@@ -21,5 +17,6 @@ public class OrderResponseDto {
 
     private int orderPrice;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime orderedAt;
 }
