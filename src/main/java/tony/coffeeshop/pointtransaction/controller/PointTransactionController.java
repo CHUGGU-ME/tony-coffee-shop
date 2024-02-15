@@ -16,7 +16,7 @@ public class PointTransactionController {
 
     @Operation(summary = "user deposit point")
     @PostMapping("/point/deposit")
-    public void getAllMenu(@RequestBody PointDepositRequestDto pointDepositRequestDto) {
+    public void depositPoint(@RequestBody PointDepositRequestDto pointDepositRequestDto) {
         pointTransactionService.depositPoint(pointDepositRequestDto);
     }
 }
