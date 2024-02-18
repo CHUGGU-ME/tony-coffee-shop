@@ -1,4 +1,4 @@
-package tony.coffeeshop.pointtransaction.domain;
+package tony.coffeeshop.point.domain;
 
 
 import jakarta.persistence.Column;
@@ -17,21 +17,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.springframework.web.bind.annotation.CookieValue;
 import tony.coffeeshop.user.domain.User;
 
 @Getter
-@Table(name = "POINT_TRANSACTION")
+@Table(name = "POINT")
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class PointTransaction {
+public class Point {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "POINT_TRANSACTION_ID")
-    @Comment("포인트 트랜잭션 ID")
+    @Column(name = "POINTID")
+    @Comment("포인트 ID")
     private Long id;
 
     @Comment("유저 시퀀스")
