@@ -1,4 +1,4 @@
-package tony.coffeeshop.pointtransaction.domain.dto;
+package tony.coffeeshop.point.domain.dto;
 
 public enum TransactionType {
     DEPOSIT,
