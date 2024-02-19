@@ -1,6 +1,6 @@
 package tony.coffeeshop.order.component;
 
-import static tony.coffeeshop.pointtransaction.service.PointTransactionServiceImpl.USER_POINT_LOCK_PREFIX;
+import static tony.coffeeshop.point.service.PointServiceImpl.USER_POINT_LOCK_PREFIX;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,9 +16,9 @@ import tony.coffeeshop.order.domain.dto.OrderRequestDto;
 import tony.coffeeshop.order.domain.dto.OrderResponseDto;
 import tony.coffeeshop.order.domain.dto.OrderWeeklyTop3Dto;
 import tony.coffeeshop.order.repository.OrderRepository;
-import tony.coffeeshop.pointtransaction.domain.PointTransaction;
-import tony.coffeeshop.pointtransaction.domain.dto.TransactionType;
-import tony.coffeeshop.pointtransaction.repository.PointTransactionRepository;
+import tony.coffeeshop.point.domain.Point;
+import tony.coffeeshop.point.domain.dto.TransactionType;
+import tony.coffeeshop.point.repository.PointRepository;
 import tony.coffeeshop.user.domain.User;
 import tony.coffeeshop.user.repository.UserRepository;
 
@@ -29,7 +29,7 @@ public class OrderComponent {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final MenuRepository menuRepository;
-    private final PointTransactionRepository pointTransactionRepository;
+    private final PointRepository pointTransactionRepository;
     private final LockHandler lockHandler;
     private final TransactionHandler transactionHandler;
 
@@ -49,13 +49,13 @@ public class OrderComponent {
 
                             LocalDateTime transactionAt = LocalDateTime.now();
                             // 포인트 사용 기록 저장
-                            PointTransaction pointTransaction = PointTransaction.builder()
+                            Point point = Point.builder()
                                     .user(user)
                                     .point(menu.getMenuPrice())
                                     .transactionType(TransactionType.USE.name())
                                     .transactionAt(transactionAt)
                                     .build();
-                            pointTransactionRepository.save(pointTransaction);
+                            pointTransactionRepository.save(point);
 
                             // 결제하고 order 만들어서 저장
                             Order order = Order.builder()
