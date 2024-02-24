@@ -1,4 +1,4 @@
-package tony.coffeeshop.pointtransaction.service;
+package tony.coffeeshop.point.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,17 +8,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import tony.coffeeshop.pointtransaction.domain.dto.PointDepositRequestDto;
-import tony.coffeeshop.pointtransaction.domain.dto.TransactionType;
+import tony.coffeeshop.point.domain.dto.PointDepositRequestDto;
+import tony.coffeeshop.point.domain.dto.TransactionType;
 import tony.coffeeshop.user.domain.User;
 import tony.coffeeshop.user.repository.UserRepository;
 
 @SpringBootTest
 @Transactional
-class PointTransactionServiceImplTest {
+class PointServiceImplTest {
 
     @Autowired
-    private PointTransactionService pointTransactionService;
+    private PointService pointService;
 
     @Autowired
     private UserRepository userRepository;
@@ -42,7 +42,7 @@ class PointTransactionServiceImplTest {
                 .build();
 
         // when
-        pointTransactionService.depositPoint(pointDepositRequestDto);
+        pointService.depositPoint(pointDepositRequestDto);
 
         // then
         User findUser = userRepository.findById(saveUser.getId()).orElseThrow(
