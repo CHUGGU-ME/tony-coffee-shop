@@ -21,13 +21,11 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @Operation(summary = "user orders menu")
     @PostMapping("")
     public ResponseEntity<OrderResponseDto> orderMenu(@RequestBody OrderRequestDto orderRequestDto) {
         return ResponseEntity.ok(orderService.orderMenu(orderRequestDto));
     }
 
-    @Operation(summary = "get weekly ordered top 3 menus")
     @GetMapping("/weekly-top3")
     public ResponseEntity<List<OrderWeeklyTop3Dto>> getWeeklyTop3() {
         return ResponseEntity.ok(orderService.getWeeklyTop3());
