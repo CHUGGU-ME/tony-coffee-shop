@@ -13,11 +13,13 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import tony.coffeeshop.order.domain.dto.OrderResponseDto;
 import tony.coffeeshop.user.domain.User;
 
+@Getter
 @Table(name = "ORDERS")
 @Entity
 @Builder
