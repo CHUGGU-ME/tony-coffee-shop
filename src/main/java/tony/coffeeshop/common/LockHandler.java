@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class LockHandler {
+
         RedissonClient redissonClient;
 
         static String REDISSON_KEY_PREFIX = "RLOCK_";
